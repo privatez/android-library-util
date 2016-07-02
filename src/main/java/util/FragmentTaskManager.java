@@ -59,8 +59,12 @@ public class FragmentTaskManager {
             newFragment.setArguments(bundle);
         }
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.hide(oldFragment).add(mShowingActivityContainerViewId, newFragment)
-                .addToBackStack(newFragmentClass.getSimpleName()).commit();
+        if (newFragment.isAdded()) {
+            transaction.hide(oldFragment).add(mShowingActivityContainerViewId, newFragment);
+        } else {
+            transaction.replace(mShowingActivityContainerViewId, newFragment);
+        }
+        transaction.addToBackStack(newFragmentClass.getSimpleName()).commit();
     }
 
     private Fragment getFragment(Class fragmentClass) {
